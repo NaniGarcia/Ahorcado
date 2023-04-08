@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Ahorcado</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Topbar Start -->
+    <div class="container-fluid bg-primary py-3 d-none d-md-block">
+        <div class="container">
+            <div class="row">
+                
+                
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+
+    <!-- Navbar Start -->
+    <div class="container-fluid position-relative nav-bar p-0">
+        <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0">
+                <a href="index.html" class="navbar-brand d-block d-lg-none">
+                    <h1 class="m-0 display-4 text-primary"><span class="text-secondary">Ahor</span>cado</h1>
+                </a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <div class="navbar-nav ml-auto py-0">
+                        <a href="index.html" class="nav-item nav-link active"></a>
+                        <a href="about.html" class="nav-item nav-link"></a>
+                        
+                    </div>
+                    <a href="index.html" class="navbar-brand mx-5 d-none d-lg-block">
+                        <h1 class="m-0 display-4 text-primary"><span class="text-secondary">Ahor</span>cado</h1>
+                    </a>
+                    <div class="navbar-nav mr-auto py-0">
+                        <a href="product.html" class="nav-item nav-link"></a>
+                        <a href="product.html" class="nav-item nav-link"></a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+    <!-- Inicio-->
+   <center><p> <br><br>
+      Inicia el juego presionando Juego nuevo <br>
+      Presiona la letra que sea conveniente e intenta adivinar <br>
+      El juego consiste en colores 
+    </p></center> 
+
+
+    <SCRIPT LANGUAGE=JavaScript>
+        var hombre = new Array("___\n", "   |\n", "   O\n", "  /", "|", "\\\n", "  /", " \\\n", "___")
+        var palabra
+        var libreriaPalabras = new Array("b l a n c o", "v e r d e", "r o j o", "a m a r r i l l o", "n e g r o",
+        "g r i s", "a z u l", "r o s a", "n a r a n j a", "m o r a d o", "c a f e" )
+        var partes = 0
+        var colNueva = 0
+        var jugando
+        
+        
+        function ObtienePalabra() {
+           //obtiene la palabra para jugar de forma pseudoaleatoria
+           var indice = Math.round ( Math.random() * 11)
+           var cadena = new String( libreriaPalabras[indice] )
+           palabra = cadena.split(" ")
+        
+        }
+        
+        
+        function DibujaHombre(visor, partes) {
+           //dibuja el hombre ahorcado
+           //partes indica el numero de partes a dibujar
+           var dibujo = ""
+           if (partes < 7)
+              for(var x = 0; x < partes; x++) {
+                 dibujo += hombre[x]
+              }
+           visor.displayHombre.value = dibujo
+        }
+        
+        
+        function DibujaLetra(visor, letra) {
+           //dibuja una letra de la palabra
+           //posicion indica donde debe dibujar la letra
+           var flag = false 
+           //indica si se encontro la letra 
+           //obtiene cadena actual
+           var cadena = new String(visor.displayPalabra.value)
+           //la separa en sus espacios
+           var letrasCadena = cadena.split(" ")
+           cadena = "" 
+           for (var x = 0; x < palabra.length; x++) {
+              if (palabra[x] == letra) {
+                 cadena += letra + " "
+                 flag = true
+              } else
+                 cadena += letrasCadena[x] + " "
+           }
+           visor.displayPalabra.value = cadena
+           return flag
+        }
+        
+        
+        function NuevaLetra(visor, letra) {
+           //añade letra lista de letras
+           visor.displayLetras.value += letra + " "
+           //comprueba si ha de pasar a la siguiente fila
+           if(colNueva == 3) {
+              visor.displayLetras.value += "\n"
+              colNueva = 0
+           } else
+              colNueva++
+        }
+        
+        
+        function Juega(visor, letra) {
+           //comprueba si esta jugando
+           if (jugando) {
+              //ciclo de jugada
+              //1. añade letra a la lista
+              NuevaLetra(visor, letra)
+              //2. dibuja la letra y comprueba si acierto
+              var acierto = DibujaLetra(visor, letra)
+              //3. si no acierto, dibuja hombre
+              if (!acierto)
+                 DibujaHombre(visor, ++partes)
+              //4. comprueba si fin
+              if (partes == 7)
+                 FinJuego(false)
+              else if (CompruebaPalabra(visor))
+                 FinJuego(true)
+              } else {
+                 alert('Pulsa Juego nuevo para comenzar\nuna partida nueva.')
+           }
+        }
+        
+        function IniciaJuego(visor) {
+           //inicializa visor y variables globales
+           jugando = true
+           partes = 0
+           colNueva = 0
+           ObtienePalabra()
+           DibujaHombre(visor, partes)
+           visor.displayPalabra.value = ""
+           for (var x = 0; x < palabra.length; x++)
+              visor.displayPalabra.value += "_ "
+           visor.displayLetras.value = ""
+        }
+        
+        function CompruebaPalabra(visor) {
+           //comprueba si se completo toda la palabra
+           var fin = true
+           //obtiene cadena actual
+           var cadena = new String(visor.displayPalabra.value)
+           //la separa en sus espacios
+           var letrasCadena = cadena.split(" ")
+           for(var x = 0; x < letrasCadena.length; x++)
+              if (letrasCadena[x] == "_")
+                 fin = false
+           return fin
+        }
+        
+        
+        function FinJuego(resultado) {
+           //indica que si se ha perdido o ganado
+           var solucion = ""
+           jugando = false 
+           if (resultado) {
+              document.visor.ganadas.value++
+              alert("Felicidades adivinaste!")
+           } else {
+             document.visor.perdidas.value++
+             //construye la palabra solucion
+             for (var x = 0; x < palabra.length; x++)
+                solucion += palabra[x]
+               
+             alert("Ya perdiste ahora te van ahorcar !\n La palabra era: " + solucion)
+           }
+        }
+        </SCRIPT>
+        
+    
+        <FORM NAME=visor>
+           <CENTER>
+           <TABLE width=547>
+            <tr>
+              <TD colspan=3 width=150 ALIGN=center><textarea name=displayHombre cols=15 rows=6></textarea>
+              <TD colspan=3 WIDTH=150 ALIGN=center><textarea name=displayLetras cols=15 rows=6></textarea>
+              <TD width=200>
+           </tr>
+           <TR>
+              <TD colspan=6 width=300 ALIGN=center><INPUT NAME=displayPalabra SIZE=30>
+              <TD ALIGN=center>&nbsp;
+            </TR>
+          
+
+            
+            
+              <td align=center width=5><input  class="btn btn-info" type=button name=botA value=" A " onClick="Juega(this.form, 'a')">
+              <td align=center width=50><input type=button class="btn btn-secondary" name=botB value=" B " onClick="Juega(this.form, 'b')">
+              <td align=center width=50><input type=button  class="btn btn-dark" name=botC value=" C " onClick="Juega(this.form, 'c')">
+              <td align=center width=50><input type=button  class="btn btn-info" name=botD value=" D " onClick="Juega(this.form, 'd')">
+              <td align=center width=50><input type=button name=botE  class="btn btn-secondary" value=" E " onClick="Juega(this.form, 'e')">
+              <td align=center width=50><input type=button name=botF class="btn btn-dark" value=" F " onClick="Juega(this.form, 'f')">
+                <td align=center><input type=button name=botG class="btn btn-info" value=" G " onClick="Juega(this.form, 'g')">
+                    <td align=center><input type=button name=botH  class="btn btn-secondary" value=" H " onClick="Juega(this.form, 'h')">
+                    <td align=center><input type=button name=botI  class="btn btn-dark" value=" I " onClick="Juega(this.form, 'i')">
+                        <td align=right valign=middle>Ganadas: <input type=text name=ganadas size=4 value=0>
+              <td>
+            <tr>
+             
+              <td align=center><input type=button name=botJ  class="btn btn-info" value=" J " onClick="Juega(this.form, 'j')">
+              <td align=center><input type=button name=botK  class="btn btn-secondary" value=" K " onClick="Juega(this.form, 'k')">
+              <td align=center><input type=button name=botL  class="btn btn-dark" value=" L " onClick="Juega(this.form, 'l')">
+              
+                <td align=center><input type=button name=botM  class="btn btn-info" value=" M " onClick="Juega(this.form, 'm')">
+                    <td align=center><input type=button name=botN class="btn btn-secondary" value=" N " onClick="Juega(this.form, 'n')">
+                    <td align=center><input type=button name=botÑ  class="btn btn-dark" value=" Ñ " onClick="Juega(this.form, 'ñ')">
+                        <td align=center><input type=button name=botO  class="btn btn-info" value=" O " onClick="Juega(this.form, 'o')">
+                            <td align=center><input type=button name=botP  class="btn btn-secondary" value=" P " onClick="Juega(this.form, 'p')">
+                            <td align=center><input type=button name=botQ  class="btn btn-dark" value=" Q " onClick="Juega(this.form, 'q')">
+
+                                <td align=right valign=middle>Perdidas: <input type=text name=perdidas size=4 value=0>
+                                    
+            <tr>
+              
+             
+              
+                <td align=center><input type=button name=botR  class="btn btn-info" value=" R " onClick="Juega(this.form, 'r')">
+                    <td align=center><input type=button name=botS class="btn btn-secondary"value=" S " onClick="Juega(this.form, 's')">
+                    <td align=center><input type=button name=botT  class="btn btn-dark" value=" T " onClick="Juega(this.form, 't')">
+                        <td align=center><input type=button name=botU class="btn btn-info" value=" U " onClick="Juega(this.form, 'u')">
+                        <td align=center><input type=button name=botV class="btn btn-secondary" value=" V " onClick="Juega(this.form, 'v')">
+                         <td align=center><input type=button name=botW class="btn btn-dark" value=" W " onClick="Juega(this.form, 'w')">
+                            
+                 <td align=center><input type=button name=botX value=" X " class="btn btn-info"  onClick="Juega(this.form, 'x')">
+                                    <td align=center><input type=button name=botY value=" Y " class="btn btn-secondary" onClick="Juega(this.form, 'y')">
+                                    <td align=center><input type=button name=botZ value=" Z "  class="btn btn-dark"  onClick="Juega(this.form, 'z')"> <br><br>
+                        
+          
+              
+              
+          
+            <tr>
+              <td colspan=3 align=center><input  class="btn btn-warning" type=button name=Inicia value="  Juego nuevo   " onClick="IniciaJuego(this.form)"> <br>
+              <td align=center><input type=button  class="btn btn-warning" value=Limpiar name=B1 onClick="this.form.ganadas.value='0'; this.form.perdidas.value='0'">
+              </tr>
+                
+          </TABLE>
+          </CENTER>
+        </FORM>
+        
+        
+    <!-- Final -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+</body>
+
+</html>
